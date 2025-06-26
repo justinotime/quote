@@ -1,0 +1,100 @@
+/* File: app/globals.css */
+/* app/globals.css or wherever your global styles live */
+@import 'tailwindcss';
+
+:root {
+    --black: #191b22;
+    --brand: #35b8be;
+    --new-green: #44734d;
+    --slate-grey: #7e828f;
+    --coral: #ff8946;
+    --alice-blue: #f5fbfc;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -font-family: sans-serif;
+    height: 100%;
+}
+
+* {
+    box-sizing: border-box;;
+}
+
+body {
+    color: #333;
+    background-color: #fff;
+    font-family: Inter, sans-serif;
+    font-size: 15px;
+    line-height: 20px;
+    min-height: 100%;
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    display: block;
+    margin: 0px;
+   -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+/* Performance optimizations */
+.whitespace-pre-line {
+    white-space: pre-line;
+}
+
+/* Optimize animations and transitions */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Optimize image transitions */
+img {
+  will-change: opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Optimize modal animations */
+.modal-content {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Optimize button hover states */
+button {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* Optimize text rendering */
+.text-optimized {
+  text-rendering: optimizeSpeed;
+  font-smooth: never;
+  -webkit-font-smoothing: none;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
