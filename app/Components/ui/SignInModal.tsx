@@ -8,13 +8,16 @@ import { signInWithGoogle, signInWithX, signInWithEmail } from '@/app/lib/supaba
 interface SignInModalProps {
   open: boolean;
   onClose: () => void;
+  onSignUpClick: () => void;
+  onAuthSuccess: () => void;
 }
 
-const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
+const SignInModal: React.FC<SignInModalProps> = ({ open, onClose, onSignUpClick, onAuthSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Memoize social providers to prevent unnecessary re-renders
   const socialProviders = useMemo(() => [
@@ -29,43 +32,55 @@ const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
     setShowEmailForm(false);
     setEmail('');
     setPassword('');
+    setError(null);
   }, [onClose]);
+
+  const handleSignUpClick = useCallback(() => {
+    onSignUpClick();
+  }, [onSignUpClick]);
 
   const handleSocialSignIn = useCallback(async (provider: string) => {
     setIsLoading(true);
+    setError(null);
     try {
       if (provider === 'google') {
         await signInWithGoogle();
+        onAuthSuccess();
       } else if (provider === 'x') {
         await signInWithX();
+        onAuthSuccess();
       } else if (provider === 'email') {
         setShowEmailForm(true);
       }
     } catch (error) {
       console.error('Authentication error:', error);
+      setError('Authentication failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [onAuthSuccess]);
 
   const handleEmailSignIn = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
 
     setIsLoading(true);
+    setError(null);
     try {
       const { error } = await signInWithEmail(email, password);
       if (error) {
         console.error('Sign in error:', error);
+        setError(error.message || 'Sign in failed. Please check your credentials.');
       } else {
-        handleClose();
+        onAuthSuccess();
       }
     } catch (error) {
       console.error('Authentication error:', error);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  }, [email, password, handleClose]);
+  }, [email, password, onAuthSuccess]);
 
   if (!open) return null;
   
@@ -93,6 +108,13 @@ const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
           </button>
           <h2 id="signin-modal-title" className="text-2xl font-bold mb-0 text-center italic">Welcome Back.</h2>
           
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+              {error}
+            </div>
+          )}
+          
           {!showEmailForm ? (
             <>
               <div className="flex flex-col gap-4 mb-4">
@@ -108,7 +130,8 @@ const SignInModal: React.FC<SignInModalProps> = ({ open, onClose }) => {
                 ))}
               </div>
               <div className="text-center text-sm mb-1 text-gray-500 font-normal">
-                No account? <a href="/signup" className="text-[#35b8be] font-semibold hover:underline">Create one</a>
+                No account?{' '}
+                <button onClick={handleSignUpClick} className="text-[#35b8be] font-semibold hover:underline bg-transparent p-0 m-0 border-0 cursor-pointer">Create one</button>
               </div>
               <div className="text-center text-xs text-gray-400 font-light">
                 Forgot email or trouble signing in? <a href="/help" className="text-[#35b8be] hover:underline">Get Help</a>

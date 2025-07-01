@@ -8,6 +8,12 @@ import SignUpModal from '../Components/ui/SignUpModal';
 export default function AboutPage() {
   const [signInOpen, setSignInOpen] = useState(false);
   const [signUpOpen, setSignUpOpen] = useState(false);
+  
+  const handleAuthSuccess = () => {
+    setSignInOpen(false);
+    setSignUpOpen(false);
+  };
+
   return (
     <>
       {/* Header */}
@@ -40,8 +46,18 @@ export default function AboutPage() {
           Welcome to Quote! We believe in writing hard, writing true, and cutting through the noise. Our platform is inspired by the clarity and minimalism of Medium, aiming to provide a beautiful space for your words to shine.
         </p>
       </main>
-      <SignInModal open={signInOpen} onClose={() => setSignInOpen(false)} />
-      <SignUpModal open={signUpOpen} onClose={() => setSignUpOpen(false)} onSignInClick={() => { setSignUpOpen(false); setSignInOpen(true); }} />
+      <SignInModal 
+        open={signInOpen} 
+        onClose={() => setSignInOpen(false)} 
+        onSignUpClick={() => { setSignInOpen(false); setSignUpOpen(true); }}
+        onAuthSuccess={handleAuthSuccess}
+      />
+      <SignUpModal 
+        open={signUpOpen} 
+        onClose={() => setSignUpOpen(false)} 
+        onSignInClick={() => { setSignUpOpen(false); setSignInOpen(true); }} 
+        onAuthSuccess={handleAuthSuccess}
+      />
     </>
   );
 } 

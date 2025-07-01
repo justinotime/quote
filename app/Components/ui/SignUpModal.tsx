@@ -9,13 +9,15 @@ interface SignUpModalProps {
   open: boolean;
   onClose: () => void;
   onSignInClick: () => void;
+  onAuthSuccess: () => void;
 }
 
-const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSignInClick }) => {
+const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSignInClick, onAuthSuccess }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showEmailForm, setShowEmailForm] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Memoize social providers to prevent unnecessary re-renders
   const socialProviders = useMemo(() => [
@@ -30,6 +32,7 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSignInClick 
     setShowEmailForm(false);
     setEmail('');
     setPassword('');
+    setError(null);
   }, [onClose]);
 
   const handleSignInClick = useCallback(() => {
@@ -38,39 +41,46 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSignInClick 
 
   const handleSocialSignUp = useCallback(async (provider: string) => {
     setIsLoading(true);
+    setError(null);
     try {
       if (provider === 'google') {
         await signInWithGoogle();
+        onAuthSuccess();
       } else if (provider === 'x') {
         await signInWithX();
+        onAuthSuccess();
       } else if (provider === 'email') {
         setShowEmailForm(true);
       }
     } catch (error) {
       console.error('Authentication error:', error);
+      setError('Authentication failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [onAuthSuccess]);
 
   const handleEmailSignUp = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
 
     setIsLoading(true);
+    setError(null);
     try {
       const { error } = await signUpWithEmail(email, password);
       if (error) {
         console.error('Sign up error:', error);
+        setError(error.message || 'Sign up failed. Please try again.');
       } else {
-        handleClose();
+        onAuthSuccess();
       }
     } catch (error) {
       console.error('Authentication error:', error);
+      setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
-  }, [email, password, handleClose]);
+  }, [email, password, onAuthSuccess]);
 
   if (!open) return null;
   
@@ -98,6 +108,13 @@ const SignUpModal: React.FC<SignUpModalProps> = ({ open, onClose, onSignInClick 
               X
             </button>
             <h2 id="signup-modal-title" className="text-2xl font-bold mb-0 text-center italic">Join Quote</h2>
+            
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
+                {error}
+              </div>
+            )}
             
             {!showEmailForm ? (
               <>

@@ -4,6 +4,7 @@ import { Montserrat } from 'next/font/google';
 import { AuthProvider } from './contexts/AuthContext';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://quote.com'),
   title: "Quote",
   description: "Write hard. Write true. Everything else is noise.",
   openGraph: {

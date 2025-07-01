@@ -4,11 +4,7 @@ import { User } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    debug: true
-  }
-});
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 // Auth helper functions
 export const signInWithGoogle = async () => {
@@ -53,11 +49,6 @@ export const signUpWithEmail = async (email: string, password: string) => {
       emailRedirectTo: `${window.location.origin}/auth/callback`
     }
   });
-  
-  if (error) {
-    console.error('Sign up error:', error);
-    throw error;
-  }
   
   return { data, error };
 };

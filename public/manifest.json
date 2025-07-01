@@ -1,0 +1,27 @@
+{
+  "name": "Quote - Write hard. Write true.",
+  "short_name": "Quote",
+  "description": "A minimalist platform for great authors and minds. Write hard. Write true. Everything else is noise.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#35b8be",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "writing", "social"],
+  "lang": "en",
+  "dir": "ltr"
+} 
